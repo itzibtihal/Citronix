@@ -4,6 +4,8 @@ spring:
       file: src/main/docker/docker-compose.yaml
       enabled: true
       lifecycle-management: start_only
+      environment:
+        DOCKER_API_VERSION: "1.46"
   jpa:
     properties:
       hibernate:
