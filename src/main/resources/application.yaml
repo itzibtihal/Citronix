@@ -1,26 +1,20 @@
-server:
-  port: 8082
 spring:
-  application:
-    name: Citronix
-  datasource:
-    url: jdbc:postgresql://localhost:5432/citronix
-    username: citronix
-    password: password
-    driver-class-name: org.postgresql.Driver
+  docker:
+    compose:
+      file: src/main/docker/docker-compose.yaml
+      enabled: true
+      lifecycle-management: start_only
   jpa:
-    hibernate:
-      ddl-auto: none
-      show-sql: true
-      properties:
-            hibernate:
-            format_sql: true
-            dialect: org.hibernate.dialect.PostgreSQLDialect
-    liquibase:
-      enabled: false
-     # change-log: db/changelog/master.yaml
-    docker:
-      compose:
-        file: src/main/docker/docker-compose.yaml  # Path to the docker-compose file
-        enabled: true
-        lifecycle-management: start_only
+    properties:
+      hibernate:
+        default_schema: public
+
+  liquibase:
+    change-log: db/changelog/changelog-master.yaml
+    enabled: false
+
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+server:
+  port: 8083
+

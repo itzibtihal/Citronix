@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731774013541-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_farm
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: location
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: area
+                  type: DOUBLE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: creation_date
+                  type: DATE
+            tableName: farm
+
