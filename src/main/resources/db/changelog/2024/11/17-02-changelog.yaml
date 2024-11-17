@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731860840687-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tree
+                  name: id
+                  type: UUID
+              - column:
+                  name: planting_date
+                  type: DATE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: field_id
+                  type: UUID
+            tableName: tree
+  - changeSet:
+      id: 1731860840687-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: field_id
+            baseTableName: tree
+            constraintName: FK_TREE_ON_FIELD
+            referencedColumnNames: id
+            referencedTableName: field
+

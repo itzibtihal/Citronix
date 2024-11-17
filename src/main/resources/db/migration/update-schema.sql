@@ -18,3 +18,13 @@ CREATE TABLE field
 
 ALTER TABLE field
     ADD CONSTRAINT FK_FIELD_ON_FARM FOREIGN KEY (farm_id) REFERENCES farm (id);
+CREATE TABLE tree
+(
+    id            UUID NOT NULL,
+    planting_date date,
+    field_id      UUID NOT NULL,
+    CONSTRAINT pk_tree PRIMARY KEY (id)
+);
+
+ALTER TABLE tree
+    ADD CONSTRAINT FK_TREE_ON_FIELD FOREIGN KEY (field_id) REFERENCES field (id);
