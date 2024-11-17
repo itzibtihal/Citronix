@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,8 +12,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class Farm {
+public class Field {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -24,18 +20,13 @@ public class Farm {
     private UUID id;
 
     @Column(nullable = false)
-    private String name;
+    private float area;
 
     @Column(nullable = false)
-    private String location;
+    private int maxTrees;
 
-    @Column(nullable = false)
-    private double area;
-
-    @Column(nullable = false)
-    private LocalDate creationDate;
-
-    @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Field> fields = new ArrayList<>();
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "farm_id", nullable = false)
+    private Farm farm;
 }
+

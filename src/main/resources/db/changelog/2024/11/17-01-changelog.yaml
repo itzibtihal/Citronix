@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731800525256-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_field
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: area
+                  type: FLOAT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: max_trees
+                  type: INT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: farm_id
+                  type: UUID
+            tableName: field
+  - changeSet:
+      id: 1731800525256-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: farm_id
+            baseTableName: field
+            constraintName: FK_FIELD_ON_FARM
+            referencedColumnNames: id
+            referencedTableName: farm
+
