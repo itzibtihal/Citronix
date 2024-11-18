@@ -1,5 +1,6 @@
 package org.youcode.citronix.services.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.youcode.citronix.domain.Client;
 import org.youcode.citronix.domain.Harvest;
@@ -7,6 +8,7 @@ import org.youcode.citronix.domain.Sale;
 import org.youcode.citronix.repositories.ClientRepository;
 import org.youcode.citronix.repositories.HarvestRepository;
 import org.youcode.citronix.repositories.SaleRepository;
+import org.youcode.citronix.services.EmailService;
 import org.youcode.citronix.services.interfaces.SaleService;
 
 import java.time.LocalDate;
@@ -19,33 +21,36 @@ public class SaleServiceImpl implements SaleService {
     private final SaleRepository saleRepository;
     private final HarvestRepository harvestRepository;
     private final ClientRepository clientRepository;
+    private final EmailService emailService;
 
-    public SaleServiceImpl(SaleRepository saleRepository, HarvestRepository harvestRepository, ClientRepository clientRepository) {
+    @Autowired
+    public SaleServiceImpl(SaleRepository saleRepository, HarvestRepository harvestRepository,
+                           ClientRepository clientRepository, EmailService emailService) {
         this.saleRepository = saleRepository;
         this.harvestRepository = harvestRepository;
         this.clientRepository = clientRepository;
+        this.emailService = emailService;
     }
 
     @Override
     public Sale createSale(UUID harvestId, UUID clientId, double unitPrice, double quantity) {
-        // Step 1: Retrieve the harvest
+
         Harvest harvest = harvestRepository.findById(harvestId)
                 .orElseThrow(() -> new IllegalArgumentException("Harvest not found"));
 
-        // Step 2: Calculate the total quantity sold (sum_saled)
+
         double sumSaled = saleRepository.findTotalQuantitySoldByHarvestId(harvestId).orElse(0.0);
 
-        // Step 3: Check if the requested quantity is available
+
         double quantityLeft = harvest.getTotalQuantity() - sumSaled;
         if (quantity > quantityLeft) {
             throw new IllegalArgumentException("Harvest only has " + quantityLeft + " kg available.");
         }
 
-        // Step 4: Retrieve the client
+
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("Client not found"));
 
-        // Step 5: Calculate revenue and create the sale
         double revenue = unitPrice * quantity;
 
         Sale sale = Sale.builder()
@@ -57,8 +62,57 @@ public class SaleServiceImpl implements SaleService {
                 .saleDate(LocalDate.now())
                 .build();
 
-        return saleRepository.save(sale);
+        Sale savedSale = saleRepository.save(sale);
+
+        // Send an email to the client
+        String subject = "Sale Confirmation";
+        String text = "Dear " + client.getName() + ",\n\n" +
+                "Thank you for your purchase!\n\n" +
+                "Details of your sale:\n" +
+                " - Quantity: " + quantity + " kg\n" +
+                " - Unit Price: $" + unitPrice + "\n" +
+                " - Total Revenue: $" + revenue + "\n\n" +
+                "We appreciate your business.\n\n" +
+                "Best regards,\nCitronix Team";
+
+        emailService.sendEmail(client.getEmail(), subject, text);
+
+        return savedSale;
     }
+
+//    @Override
+//    public Sale createSale(UUID harvestId, UUID clientId, double unitPrice, double quantity) {
+//        // Step 1: Retrieve the harvest
+//        Harvest harvest = harvestRepository.findById(harvestId)
+//                .orElseThrow(() -> new IllegalArgumentException("Harvest not found"));
+//
+//        // Step 2: Calculate the total quantity sold (sum_saled)
+//        double sumSaled = saleRepository.findTotalQuantitySoldByHarvestId(harvestId).orElse(0.0);
+//
+//        // Step 3: Check if the requested quantity is available
+//        double quantityLeft = harvest.getTotalQuantity() - sumSaled;
+//        if (quantity > quantityLeft) {
+//            throw new IllegalArgumentException("Harvest only has " + quantityLeft + " kg available.");
+//        }
+//
+//        // Step 4: Retrieve the client
+//        Client client = clientRepository.findById(clientId)
+//                .orElseThrow(() -> new IllegalArgumentException("Client not found"));
+//
+//        // Step 5: Calculate revenue and create the sale
+//        double revenue = unitPrice * quantity;
+//
+//        Sale sale = Sale.builder()
+//                .harvest(harvest)
+//                .client(client)
+//                .unitPrice(unitPrice)
+//                .quantity(quantity)
+//                .revenue(revenue)
+//                .saleDate(LocalDate.now())
+//                .build();
+//
+//        return saleRepository.save(sale);
+//    }
 
     @Override
     public List<Sale> getAllSales() {
