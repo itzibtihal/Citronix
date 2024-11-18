@@ -1,0 +1,91 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731929405205-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_client
+                  name: id
+                  type: UUID
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: phone_number
+                  type: VARCHAR(255)
+            tableName: client
+  - changeSet:
+      id: 1731929405205-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_sale
+                  name: id
+                  type: UUID
+              - column:
+                  name: sale_date
+                  type: DATE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: unit_price
+                  type: DOUBLE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: quantity
+                  type: DOUBLE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: revenue
+                  type: DOUBLE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: client_id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: harvest_id
+                  type: UUID
+            tableName: sale
+  - changeSet:
+      id: 1731929405205-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: client_id
+            baseTableName: sale
+            constraintName: FK_SALE_ON_CLIENT
+            referencedColumnNames: id
+            referencedTableName: client
+  - changeSet:
+      id: 1731929405205-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: harvest_id
+            baseTableName: sale
+            constraintName: FK_SALE_ON_HARVEST
+            referencedColumnNames: id
+            referencedTableName: harvest
+
