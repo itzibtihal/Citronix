@@ -30,18 +30,9 @@ public class HarvestServiceImpl implements HarvestService {
         this.fieldRepository = fieldRepository;
     }
 
-    /**
-     * Create a new harvest, ensuring that only one harvest exists per season for a field.
-     * @param fieldId The ID of the field for the harvest.
-     * @param harvestDetails List of harvest details, including harvested quantity per tree.
-     * @param season The season in which the harvest is made.
-     * @param totalQuantity The total quantity harvested (in kg).
-     * @return The created Harvest object.
-     */
-
     @Override
     public Harvest createHarvest(UUID fieldId, @NotEmpty List<HarvestDetail> harvestDetails, Season season, double totalQuantity) {
-        // Validate that there is only one harvest per season for a field
+        // Validate one harvest per season for a field
         if (harvestRepository.existsByFieldIdAndSeason(fieldId, season)) {
             throw new IllegalArgumentException("A harvest already exists for this field and season.");
         }
@@ -49,6 +40,9 @@ public class HarvestServiceImpl implements HarvestService {
         // Retrieve the field by its ID
         Field field = fieldRepository.findById(fieldId)
                 .orElseThrow(() -> new IllegalArgumentException("Field not found"));
+
+        // Validate harvest details
+        validateHarvestDetails(harvestDetails, season);
 
         // Calculate the totalQuantity from harvestDetails
         double calculatedTotalQuantity = harvestDetails.stream()
@@ -75,38 +69,40 @@ public class HarvestServiceImpl implements HarvestService {
         return harvest;
     }
 
-    /**
-     * Get all harvests.
-     * @return List of all Harvest objects.
-     */
+    private void validateHarvestDetails(List<HarvestDetail> harvestDetails, Season season) {
+        for (HarvestDetail detail : harvestDetails) {
+
+            if (detail.getTree().getPlantingDate().plusYears(20).isBefore(LocalDate.now())) {
+                throw new IllegalArgumentException("Tree " + detail.getTree().getId() + " is older than 20 years and cannot be harvested.");
+            }
+
+            int plantingMonth = detail.getTree().getPlantingDate().getMonthValue();
+            if (plantingMonth < 3 || plantingMonth > 5) {
+                throw new IllegalArgumentException("Tree " + detail.getTree().getId() + " was not planted during the valid period (March to May).");
+            }
+
+            if (harvestDetailRepository.existsByTreeIdAndHarvestSeason(detail.getTree().getId(), season)) {
+                throw new IllegalArgumentException("Tree " + detail.getTree().getId() + " is already included in another harvest for the same season.");
+            }
+        }
+    }
+
     @Override
     public List<Harvest> getAllHarvests() {
         return harvestRepository.findAll();
     }
 
-    /**
-     * Get a specific harvest by its ID.
-     * @param harvestId The ID of the harvest.
-     * @return The Harvest object.
-     */
     @Override
     public Harvest getHarvestById(UUID harvestId) {
         return harvestRepository.findById(harvestId)
                 .orElseThrow(() -> new IllegalArgumentException("Harvest not found"));
     }
 
-    /**
-     * Delete a harvest by its ID.
-     * @param harvestId The ID of the harvest to delete.
-     */
     @Override
     public void deleteHarvest(UUID harvestId) {
-        // Check if the harvest exists before attempting to delete it
         if (!harvestRepository.existsById(harvestId)) {
             throw new IllegalArgumentException("Harvest not found");
         }
-
-        // Delete the harvest
         harvestRepository.deleteById(harvestId);
     }
 }
