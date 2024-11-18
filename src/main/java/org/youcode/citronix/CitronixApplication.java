@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.youcode.citronix"})
+//@ComponentScan(basePackages = {"org.youcode.citronix"})
 public class CitronixApplication {
 
     public static void main(String[] args) {
