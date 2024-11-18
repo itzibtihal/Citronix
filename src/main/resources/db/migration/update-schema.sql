@@ -28,3 +28,30 @@ CREATE TABLE tree
 
 ALTER TABLE tree
     ADD CONSTRAINT FK_TREE_ON_FIELD FOREIGN KEY (field_id) REFERENCES field (id);
+CREATE TABLE harvest
+(
+    id             UUID             NOT NULL,
+    field_id       UUID             NOT NULL,
+    harvest_date   date,
+    season         VARCHAR(255),
+    total_quantity DOUBLE PRECISION NOT NULL,
+    CONSTRAINT pk_harvest PRIMARY KEY (id)
+);
+
+CREATE TABLE harvest_detail
+(
+    id         UUID             NOT NULL,
+    tree_id    UUID             NOT NULL,
+    harvest_id UUID             NOT NULL,
+    quantity   DOUBLE PRECISION NOT NULL,
+    CONSTRAINT pk_harvestdetail PRIMARY KEY (id)
+);
+
+ALTER TABLE harvest_detail
+    ADD CONSTRAINT FK_HARVESTDETAIL_ON_HARVEST FOREIGN KEY (harvest_id) REFERENCES harvest (id);
+
+ALTER TABLE harvest_detail
+    ADD CONSTRAINT FK_HARVESTDETAIL_ON_TREE FOREIGN KEY (tree_id) REFERENCES tree (id);
+
+ALTER TABLE harvest
+    ADD CONSTRAINT FK_HARVEST_ON_FIELD FOREIGN KEY (field_id) REFERENCES field (id);

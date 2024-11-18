@@ -1,0 +1,114 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731920533858-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_farm
+                  name: id
+                  type: char(36)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: location
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: area
+                  type: DOUBLE precision
+              - column:
+                  constraints:
+                    nullable: false
+                  name: creation_date
+                  type: date
+            tableName: farm
+  - changeSet:
+      id: 1731920533858-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_field
+                  name: id
+                  type: char(36)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: area
+                  type: DOUBLE precision
+              - column:
+                  constraints:
+                    nullable: false
+                  name: max_trees
+                  type: INT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: farm_id
+                  type: char(36)
+            tableName: field
+  - changeSet:
+      id: 1731920533858-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tree
+                  name: id
+                  type: char(36)
+              - column:
+                  name: planting_date
+                  type: date
+              - column:
+                  constraints:
+                    nullable: false
+                  name: field_id
+                  type: char(36)
+            tableName: tree
+  - changeSet:
+      id: 1731920533858-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: farm_id
+            baseTableName: field
+            constraintName: fk_field_on_farm
+            onDelete: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: farm
+  - changeSet:
+      id: 1731920533858-5
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: field_id
+            baseTableName: tree
+            constraintName: fk_tree_on_field
+            onDelete: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: field
+
