@@ -47,6 +47,13 @@
             <artifactId>liquibase-core</artifactId>
         </dependency>
 
+       <!--Add the mail dependencies -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-docker-compose</artifactId>

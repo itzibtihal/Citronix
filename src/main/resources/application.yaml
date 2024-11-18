@@ -10,10 +10,20 @@ spring:
     properties:
       hibernate:
         default_schema: public
-
   liquibase:
     change-log: classpath:db/changelog/changelog-master.yaml
     enabled: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: citronixmaroc@gmail.com
+    password: zdpyuiuruwxicoem
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
