@@ -1,0 +1,96 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1731920685697-1
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_harvest
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: field_id
+                  type: UUID
+              - column:
+                  name: harvest_date
+                  type: DATE
+              - column:
+                  name: season
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: total_quantity
+                  type: DOUBLE
+            tableName: harvest
+  - changeSet:
+      id: 1731920685697-2
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_harvestdetail
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: tree_id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: harvest_id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: quantity
+                  type: DOUBLE
+            tableName: harvest_detail
+  - changeSet:
+      id: 1731920685697-3
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: harvest_id
+            baseTableName: harvest_detail
+            constraintName: FK_HARVESTDETAIL_ON_HARVEST
+            referencedColumnNames: id
+            referencedTableName: harvest
+  - changeSet:
+      id: 1731920685697-4
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: tree_id
+            baseTableName: harvest_detail
+            constraintName: FK_HARVESTDETAIL_ON_TREE
+            referencedColumnNames: id
+            referencedTableName: tree
+  - changeSet:
+      id: 1731920685697-5
+      author: Youcode
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: field_id
+            baseTableName: harvest
+            constraintName: FK_HARVEST_ON_FIELD
+            referencedColumnNames: id
+            referencedTableName: field
+
