@@ -26,22 +26,18 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public Field createField(UUID farmId, Field field) {
-        // Step 1: Validate that the farm exists
         Farm farm = farmRepository.findById(farmId)
                 .orElseThrow(() -> new IllegalArgumentException("Farm not found with ID: " + farmId));
-
-        // Step 2: Check if the farm already has 10 fields
         long fieldCount = fieldRepository.countByFarmId(farmId);
         if (fieldCount >= 10) {
             throw new IllegalArgumentException("Farm cannot have more than 10 fields.");
         }
 
-        // Step 3: Check if the field area exceeds 50% of the farm's area
         if (field.getArea() > (farm.getArea() * 0.5)) {
             throw new IllegalArgumentException("Field area exceeds 50% of the farm's total area.");
         }
 
-        // Step 4: Ensure the sum of all field areas is less than the farm's area
+
         double totalFieldArea = fieldRepository.findByFarmId(farmId).stream()
                 .mapToDouble(Field::getArea)
                 .sum();
@@ -49,13 +45,11 @@ public class FieldServiceImpl implements FieldService {
             throw new IllegalArgumentException("Total area of fields must be strictly less than the farm's total area.");
         }
 
-        // Step 5: Calculate maxTrees based on the field's area
         field.setMaxTrees((int) (field.getArea() / 100.0));
 
-        // Step 6: Associate the field with the farm
         field.setFarm(farm);
 
-        // Step 7: Save the field
+
         return fieldRepository.save(field);
     }
 
@@ -64,15 +58,14 @@ public class FieldServiceImpl implements FieldService {
         Field existingField = fieldRepository.findById(fieldId)
                 .orElseThrow(() -> new IllegalArgumentException("Field not found with ID: " + fieldId));
 
-        // Update properties
+
         existingField.setArea(updatedField.getArea());
 
-        // Step 1: Check if the updated field area exceeds 50% of the farm's area
         if (updatedField.getArea() > (existingField.getFarm().getArea() * 0.5)) {
             throw new IllegalArgumentException("Field area exceeds 50% of the farm's total area.");
         }
 
-        // Step 2: Ensure the sum of all field areas is less than the farm's area
+
         double totalFieldArea = fieldRepository.findByFarmId(existingField.getFarm().getId()).stream()
                 .mapToDouble(Field::getArea)
                 .sum();
@@ -80,7 +73,7 @@ public class FieldServiceImpl implements FieldService {
             throw new IllegalArgumentException("Total area of fields must be strictly less than the farm's total area.");
         }
 
-        // Recalculate maxTrees
+
         existingField.setMaxTrees((int) (updatedField.getArea() / 100.0));
 
         return fieldRepository.save(existingField);
