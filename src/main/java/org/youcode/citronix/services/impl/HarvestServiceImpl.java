@@ -32,45 +32,42 @@ public class HarvestServiceImpl implements HarvestService {
 
     @Override
     public Harvest createHarvest(UUID fieldId, @NotEmpty List<HarvestDetail> harvestDetails, Season season, double totalQuantity) {
-        // Validate one harvest per season for a field
+
         if (harvestRepository.existsByFieldIdAndSeason(fieldId, season)) {
             throw new IllegalArgumentException("A harvest already exists for this field and season.");
         }
 
-        // Retrieve the field by its ID
         Field field = fieldRepository.findById(fieldId)
                 .orElseThrow(() -> new IllegalArgumentException("Field not found"));
 
-        // Validate harvest details
-        validateHarvestDetails(harvestDetails, season);
+        validateHarvestDetails(harvestDetails, season, field);
 
-        // Calculate the totalQuantity from harvestDetails
         double calculatedTotalQuantity = harvestDetails.stream()
                 .mapToDouble(HarvestDetail::getQuantity)
                 .sum();
 
-        // Create a new harvest object
         Harvest harvest = Harvest.builder()
                 .field(field)
                 .season(season)
-                .totalQuantity(calculatedTotalQuantity) // Use calculated total quantity
-                .harvestDate(LocalDate.now()) // Set the current date as the harvest date
+                .totalQuantity(calculatedTotalQuantity)
+                .harvestDate(LocalDate.now())
                 .build();
 
-        // Set the Harvest reference for each HarvestDetail
         harvestDetails.forEach(hd -> hd.setHarvest(harvest));
 
-        // Set the harvest details to the harvest object
         harvest.setHarvestDetails(harvestDetails);
 
-        // Save the harvest, which will cascade to HarvestDetails due to CascadeType.ALL
         harvestRepository.save(harvest);
 
         return harvest;
     }
 
-    private void validateHarvestDetails(List<HarvestDetail> harvestDetails, Season season) {
+    private void validateHarvestDetails(List<HarvestDetail> harvestDetails, Season season, Field field) {
         for (HarvestDetail detail : harvestDetails) {
+
+            if (!field.getTrees().contains(detail.getTree())) {
+                throw new IllegalArgumentException("Tree " + detail.getTree().getId() + " does not belong to the field " + field.getId() + ".");
+            }
 
             if (detail.getTree().getPlantingDate().plusYears(20).isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException("Tree " + detail.getTree().getId() + " is older than 20 years and cannot be harvested.");
@@ -86,6 +83,7 @@ public class HarvestServiceImpl implements HarvestService {
             }
         }
     }
+
 
     @Override
     public List<Harvest> getAllHarvests() {
