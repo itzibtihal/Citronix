@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.youcode.citronix.domain.Harvest;
-import org.youcode.citronix.domain.HarvestDetail;
 import org.youcode.citronix.services.interfaces.HarvestService;
 import org.youcode.citronix.web.vm.HarvestVm.HarvestVM;
 import org.youcode.citronix.web.vm.HarvestVm.HarvestResponseVM;
@@ -38,23 +37,17 @@ public class HarvestController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<HarvestResponseVM> save(@RequestBody @Valid HarvestVM harvestVM) {
-        // Convert HarvestDetailVM to HarvestDetail
-        List<HarvestDetail> harvestDetails = harvestMapper.harvestDetailVMsToHarvestDetails(harvestVM.getHarvestDetails());
 
-        // Call the service to create the harvest
         Harvest savedHarvest = harvestService.createHarvest(
                 harvestVM.getFieldId(),
-                harvestDetails,
-                harvestVM.getSeason(),
-                0 // Placeholder; totalQuantity is calculated in the service
+                harvestVM.getSeason()
         );
 
-        // Convert the saved Harvest entity to HarvestResponseVM
+
         HarvestResponseVM response = harvestMapper.harvestToHarvestResponseVM(savedHarvest);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-
 
     @GetMapping("/all")
     @Operation(summary = "Get all harvests", description = "Retrieves a list of all harvests.")

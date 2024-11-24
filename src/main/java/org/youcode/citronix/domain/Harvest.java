@@ -21,10 +21,6 @@ public class Harvest {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "field_id", nullable = false)
-    private Field field;
-
     private LocalDate harvestDate;
 
     @Enumerated(EnumType.STRING)
@@ -32,7 +28,7 @@ public class Harvest {
 
     private double totalQuantity;
 
-    @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HarvestDetail> harvestDetails;
 
     @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL)
