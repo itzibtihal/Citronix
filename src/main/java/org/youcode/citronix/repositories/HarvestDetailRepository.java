@@ -12,9 +12,14 @@ import java.util.UUID;
 public interface HarvestDetailRepository extends JpaRepository<HarvestDetail, UUID> {
 
     List<HarvestDetail> findByHarvestId(UUID harvestId);
-    HarvestDetail findByTreeIdAndHarvestId(UUID treeId, UUID harvestId);
+
+    @Query("SELECT hd FROM HarvestDetail hd WHERE hd.tree.id = :treeId AND hd.harvest.id = :harvestId")
+    HarvestDetail findByTreeIdAndHarvestId(@Param("treeId") UUID treeId, @Param("harvestId") UUID harvestId);
+
     @Query("SELECT COUNT(hd) > 0 FROM HarvestDetail hd WHERE hd.tree.id = :treeId AND hd.harvest.season = :season")
     boolean existsByTreeIdAndHarvestSeason(@Param("treeId") UUID treeId, @Param("season") Season season);
 
+    @Query("SELECT hd FROM HarvestDetail hd WHERE hd.harvest.id = :harvestId AND hd.tree.field.id = :fieldId")
+    List<HarvestDetail> findByHarvestIdAndFieldId(@Param("harvestId") UUID harvestId, @Param("fieldId") UUID fieldId);
 
 }

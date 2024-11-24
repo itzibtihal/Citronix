@@ -14,31 +14,25 @@ public interface TreeMapper {
 
     TreeMapper INSTANCE = Mappers.getMapper(TreeMapper.class);
 
-    // Convert Tree entity to TreeVM (ViewModel)
-    @Mapping(target = "fieldId", source = "field.id")  // Map field ID explicitly
+    @Mapping(target = "fieldId", source = "field.id")
     TreeVM treeToTreeVM(Tree tree);
 
-    // Convert TreeVM to Tree entity (for create/update)
-    @Mapping(target = "id", ignore = true) // Ignore id when mapping from TreeVM to Tree for create
-    @Mapping(target = "field", ignore = true) // Ignore field, will be set separately in service
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "field", ignore = true)
     Tree treeVMToTree(TreeVM treeVM);
 
-    // Convert Tree entity to TreeResponseVM (Response model)
-    @Mapping(target = "age", source = "age")  // Use the calculated 'age' from the entity
-    @Mapping(target = "productivity", source = "productivity")  // Use the calculated 'productivity' from the entity
-    @Mapping(target = "fieldId", source = "field.id")  // Map field ID explicitly
+    @Mapping(target = "age", source = "age")
+    @Mapping(target = "productivity", source = "productivity")
+    @Mapping(target = "fieldId", source = "field.id")
     TreeResponseVM treeToTreeResponseVM(Tree tree);
 
-    // Convert TreeResponseVM to Tree entity (used if you want to map back from response VM)
-    @Mapping(target = "id", ignore = true)  // Ignore id when mapping from TreeResponseVM to Tree
-    @Mapping(target = "field", ignore = true)  // Ignore field, will be set separately in service
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "field", ignore = true)
     Tree treeResponseVMToTree(TreeResponseVM treeResponseVM);
 
-    // Custom method directly used in the mapper
     default UUID mapFieldId(Tree tree) {
         return tree.getField() != null ? tree.getField().getId() : null;
     }
 
-    // Convert a collection of Tree entities to a collection of TreeResponseVMs
     Iterable<TreeResponseVM> treesToTreeResponseVMs(Iterable<Tree> trees);
 }

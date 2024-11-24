@@ -15,4 +15,5 @@ public class HarvestDetailResponseVM {
 
     @Positive(message = "Quantity must be positive.")
     private double quantity;
+
 }

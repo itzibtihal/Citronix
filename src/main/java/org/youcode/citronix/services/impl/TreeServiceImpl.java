@@ -29,9 +29,7 @@ public class TreeServiceImpl implements TreeService {
         if (!tree.isPlantingSeason()) {
             throw new IllegalArgumentException("Tree planting must be between March and May.");
         }
-        double totalFieldArea = fieldRepository.findById(fieldId)
-                .map(Field::getArea)
-                .orElseThrow(() -> new IllegalArgumentException("Field not found"));
+        double totalFieldArea = fieldRepository.findById(fieldId).map(Field::getArea).orElseThrow(() -> new IllegalArgumentException("Field not found"));
 
         long numberOfTrees = treeRepository.countByFieldId(fieldId);
         double treeDensity = numberOfTrees / totalFieldArea;
