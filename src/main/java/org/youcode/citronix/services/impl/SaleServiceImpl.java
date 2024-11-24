@@ -82,14 +82,11 @@ public class SaleServiceImpl implements SaleService {
 
 //    @Override
 //    public Sale createSale(UUID harvestId, UUID clientId, double unitPrice, double quantity) {
-//        // Step 1: Retrieve the harvest
 //        Harvest harvest = harvestRepository.findById(harvestId)
 //                .orElseThrow(() -> new IllegalArgumentException("Harvest not found"));
 //
-//        // Step 2: Calculate the total quantity sold (sum_saled)
 //        double sumSaled = saleRepository.findTotalQuantitySoldByHarvestId(harvestId).orElse(0.0);
 //
-//        // Step 3: Check if the requested quantity is available
 //        double quantityLeft = harvest.getTotalQuantity() - sumSaled;
 //        if (quantity > quantityLeft) {
 //            throw new IllegalArgumentException("Harvest only has " + quantityLeft + " kg available.");

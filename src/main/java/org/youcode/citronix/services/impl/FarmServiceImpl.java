@@ -31,10 +31,8 @@ public class FarmServiceImpl implements FarmService {
         if (farmOptional.isPresent()) {
             throw new RuntimeException("Farm already exists");
         }
-        // Log the farm details before saving
         System.out.println("Saving Farm: " + farm);
         Farm savedFarm = farmRepository.save(farm);
-        // Log the saved farm details
         System.out.println("Saved Farm: " + savedFarm);
         return savedFarm;
     }

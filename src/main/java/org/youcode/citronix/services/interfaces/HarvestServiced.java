@@ -1,18 +1,17 @@
 package org.youcode.citronix.services.interfaces;
 
+import jakarta.validation.constraints.NotEmpty;
 import org.youcode.citronix.domain.Harvest;
-import org.youcode.citronix.domain.Tree;
+import org.youcode.citronix.domain.HarvestDetail;
 import org.youcode.citronix.domain.enums.Season;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface HarvestService {
-    Harvest createHarvest(UUID fieldId, Season season);
+public interface HarvestServiced {
 
-    void validateTree(Tree tree, Season season);
+    Harvest createHarvest(UUID fieldId, @NotEmpty List<HarvestDetail> harvestDetails, Season season, double totalQuantity);
 
-    List<Harvest> getAllHarvests();
 
     Harvest getHarvestById(UUID harvestId);
 
