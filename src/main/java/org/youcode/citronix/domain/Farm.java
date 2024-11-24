@@ -35,7 +35,7 @@ public class Farm {
     @Column(nullable = false)
     private LocalDate creationDate;
 
-    @OneToMany(mappedBy = "farm", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "farm", orphanRemoval = true)
     private List<Field> fields = new ArrayList<>();
 
 }

@@ -28,9 +28,9 @@ public class Harvest {
 
     private double totalQuantity;
 
-    @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "harvest", orphanRemoval = true)
     private List<HarvestDetail> harvestDetails;
 
-    @OneToMany(mappedBy = "harvest", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "harvest", orphanRemoval = true)
     private List<Sale> sales;
 }
