@@ -58,7 +58,6 @@ public class ClientServiceImpl implements ClientService {
             throw new IllegalArgumentException("A client with this email already exists.");
         }
 
-
         client.setName(name);
         client.setEmail(email);
         client.setPhoneNumber(phoneNumber);

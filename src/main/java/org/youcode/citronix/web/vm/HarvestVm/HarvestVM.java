@@ -19,6 +19,8 @@ public class HarvestVM {
     @NotNull(message = "Season is required.") // Ensures the season is provided
     private Season season;
 
-    @NotEmpty(message = "Harvest details cannot be empty.") // Ensures the harvestDetails list is not empty
-    private List<@Valid HarvestDetailVM> harvestDetails; // Validates each item in the list as well
+//    @NotEmpty(message = "Harvest details cannot be empty.") // Ensures the harvestDetails list is not empty
+//    private List<@Valid HarvestDetailVM> harvestDetails; // Validates each item in the list as well
+//}
+
 }

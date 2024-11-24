@@ -19,10 +19,10 @@ public interface FieldMapper {
     @Mapping(target = "maxTrees", ignore = true)
     Field toEntity(FieldVM fieldVM);
 
-    @Mapping(source = "farm.id", target = "farmId") // Removed qualifiedByName
+    @Mapping(source = "farm.id", target = "farmId")
     FieldResponseVM toResponse(Field field);
 
-    // Custom method directly used in the mapper
+
     default UUID mapFarmId(Field field) {
         return field.getFarm() != null ? field.getFarm().getId() : null;
     }
