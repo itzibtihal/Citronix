@@ -22,6 +22,7 @@ spring:
       mail:
         smtp:
           auth: true
+          #securiser la connexion en activant le chiffrement TLS/SSL
           starttls:
             enable: true
 

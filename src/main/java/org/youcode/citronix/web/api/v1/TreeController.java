@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -98,15 +101,23 @@ public class TreeController {
 
 
     @GetMapping("/field/{fieldId}")
-    @Operation(summary = "Find all trees by field ID", description = "Retrieves all trees associated with a specific field by its UUID.")
+    @Operation(summary = "Find all trees by field ID (paginated)", description = "Retrieves a paginated list of trees associated with a specific field by its UUID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Trees found successfully"),
             @ApiResponse(responseCode = "404", description = "Field not found"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<Iterable<TreeResponseVM>> findByField(@PathVariable UUID fieldId) {
-        Iterable<Tree> trees = treeService.getTreesByField(fieldId);
-        Iterable<TreeResponseVM> response = treeMapper.treesToTreeResponseVMs(trees);
+    public ResponseEntity<Page<TreeResponseVM>> findByField(
+            @PathVariable UUID fieldId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Tree> treesPage = treeService.getTreesByField(fieldId, pageable);
+
+        Page<TreeResponseVM> response = treesPage.map(treeMapper::treeToTreeResponseVM);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }

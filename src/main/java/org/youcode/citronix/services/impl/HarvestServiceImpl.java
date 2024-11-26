@@ -1,6 +1,8 @@
 package org.youcode.citronix.services.impl;
 
 import com.google.common.util.concurrent.AtomicDouble;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.youcode.citronix.domain.*;
 import org.youcode.citronix.domain.enums.Season;
@@ -102,8 +104,8 @@ public class HarvestServiceImpl implements HarvestService {
 
 
     @Override
-    public List<Harvest> getAllHarvests() {
-        return harvestRepository.findAll();
+    public Page<Harvest> getAllHarvests(Pageable pageable) {
+        return harvestRepository.findAll(pageable);
     }
 
 

@@ -1,5 +1,7 @@
 package org.youcode.citronix.services.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.youcode.citronix.domain.Tree;
 
 import java.util.Optional;
@@ -15,5 +17,5 @@ public interface TreeService {
 
     Optional<Tree> getTreeById(UUID treeId);
 
-    Iterable<Tree> getTreesByField(UUID fieldId);
+    Page<Tree> getTreesByField(UUID fieldId, Pageable pageable);
 }
