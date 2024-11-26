@@ -1,5 +1,7 @@
 package org.youcode.citronix.services.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.youcode.citronix.domain.Sale;
 
 import java.util.List;
@@ -9,7 +11,7 @@ public interface SaleService {
 
     Sale createSale(UUID harvestId, UUID clientId, double unitPrice, double quantity);
 
-    List<Sale> getAllSales();
+    Page<Sale> getAllSales(Pageable pageable);
 
     Sale getSaleById(UUID saleId);
 

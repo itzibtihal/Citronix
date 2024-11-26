@@ -1,6 +1,8 @@
 package org.youcode.citronix.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.youcode.citronix.domain.Client;
 import org.youcode.citronix.domain.Harvest;
@@ -112,9 +114,10 @@ public class SaleServiceImpl implements SaleService {
 //    }
 
     @Override
-    public List<Sale> getAllSales() {
-        return saleRepository.findAll();
+    public Page<Sale> getAllSales(Pageable pageable) {
+        return saleRepository.findAll(pageable);
     }
+
 
     @Override
     public Sale getSaleById(UUID saleId) {

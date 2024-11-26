@@ -19,14 +19,13 @@ import java.util.List;
 public class FarmSearchRepositoryImpl implements FarmSearchRepository {
 
     @PersistenceContext
-    private EntityManager entityManager;
+    private EntityManager entityManager; // JPA
 
     @Override
     public List<FarmSearchDTO> findByCriteria(FarmSearchDTO searchDTO) {
         CriteriaBuilder cb  = entityManager.getCriteriaBuilder();
-        CriteriaQuery<FarmSearchDTO> query = cb.createQuery(FarmSearchDTO.class);
-        Root<Farm> farmRoot = query.from(Farm.class);
-
+        CriteriaQuery<FarmSearchDTO> query = cb.createQuery(FarmSearchDTO.class); // select  FarmSearchDTO
+        Root<Farm> farmRoot = query.from(Farm.class);// from Farm
 
         query.select(cb.construct(FarmSearchDTO.class,
                 farmRoot.get("name"),
@@ -34,7 +33,7 @@ public class FarmSearchRepositoryImpl implements FarmSearchRepository {
                 farmRoot.get("creationDate")
         ));
 
-        List<Predicate> predicates = new ArrayList<>();
+        List<Predicate> predicates = new ArrayList<>();// where
 
         if (StringUtils.hasText(searchDTO.getName())) {
             predicates.add(cb.equal(farmRoot.get("name"), searchDTO.getName()));
@@ -52,4 +51,12 @@ public class FarmSearchRepositoryImpl implements FarmSearchRepository {
 
         return entityManager.createQuery(query).getResultList();
     }
+
+    // example
+//    SELECT name, location, creation_date
+//    FROM Farm
+//    WHERE name = 'Some Name'
+//    AND LOWER(location) LIKE '%some location%'
+//    AND creation_date = '2024-11-18';
+
 }

@@ -3,12 +3,14 @@ package org.youcode.citronix.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import org.youcode.citronix.domain.Harvest;
 import org.youcode.citronix.domain.enums.Season;
 
 import java.util.List;
 import java.util.UUID;
 
+@Repository
 public interface HarvestRepository extends JpaRepository<Harvest, UUID> {
 
     @Query("SELECT COUNT(h) > 0 FROM Harvest h WHERE h.season = :season AND h.id IN " +

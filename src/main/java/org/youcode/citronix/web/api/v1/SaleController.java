@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,16 +45,23 @@ public class SaleController {
     }
 
     @GetMapping("/all")
-    @Operation(summary = "Get all sales", description = "Retrieves a list of all recorded sales.")
+    @Operation(summary = "Get all sales (paginated)", description = "Retrieves a paginated list of all recorded sales.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Sales retrieved successfully"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<List<SaleResponseVM>> getAllSales() {
-        List<Sale> sales = saleService.getAllSales();
-        List<SaleResponseVM> responses = saleMapper.salesToSaleResponseVMs(sales);
+    public ResponseEntity<Page<SaleResponseVM>> getAllSales(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Sale> salesPage = saleService.getAllSales(pageable);
+
+        Page<SaleResponseVM> responses = salesPage.map(saleMapper::saleToSaleResponseVM);
+
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
+
 
     @GetMapping("/{saleId}")
     @Operation(summary = "Get sale by ID", description = "Retrieves details of a specific sale by its unique ID.")

@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,17 +52,36 @@ public class HarvestController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+//    @GetMapping("/all")
+//    @Operation(summary = "Get all harvests", description = "Retrieves a list of all harvests.")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Harvests retrieved successfully"),
+//            @ApiResponse(responseCode = "500", description = "Internal server error")
+//    })
+//    public ResponseEntity<List<HarvestResponseVM>> getAllHarvests() {
+//        List<Harvest> harvests = harvestService.getAllHarvests();
+//        List<HarvestResponseVM> responses = harvestMapper.harvestsToHarvestResponseVMs(harvests);
+//        return new ResponseEntity<>(responses, HttpStatus.OK);
+//    }
+
     @GetMapping("/all")
-    @Operation(summary = "Get all harvests", description = "Retrieves a list of all harvests.")
+    @Operation(summary = "Get all harvests (paginated)", description = "Retrieves a paginated list of all harvests.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Harvests retrieved successfully"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<List<HarvestResponseVM>> getAllHarvests() {
-        List<Harvest> harvests = harvestService.getAllHarvests();
-        List<HarvestResponseVM> responses = harvestMapper.harvestsToHarvestResponseVMs(harvests);
+    public ResponseEntity<Page<HarvestResponseVM>> getAllHarvests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Harvest> harvestsPage = harvestService.getAllHarvests(pageable);
+
+        Page<HarvestResponseVM> responses = harvestsPage.map(harvestMapper::harvestToHarvestResponseVM);
+
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
+
 
     @GetMapping("/find/{harvestId}")
     @Operation(summary = "Get a specific harvest by ID", description = "Retrieves the details of a harvest by its ID.")

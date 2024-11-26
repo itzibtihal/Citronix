@@ -1,5 +1,7 @@
 package org.youcode.citronix.services.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.youcode.citronix.domain.Field;
 import org.youcode.citronix.domain.Tree;
@@ -87,8 +89,8 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Override
-    public Iterable<Tree> getTreesByField(UUID fieldId) {
-        return treeRepository.findByFieldId(fieldId);
+    public Page<Tree> getTreesByField(UUID fieldId, Pageable pageable) {
+        return treeRepository.findByFieldId(fieldId, pageable); // Paginated query
     }
 
 }

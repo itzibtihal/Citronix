@@ -1,5 +1,7 @@
 package org.youcode.citronix.services.interfaces;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.youcode.citronix.domain.Harvest;
 import org.youcode.citronix.domain.Tree;
 import org.youcode.citronix.domain.enums.Season;
@@ -12,7 +14,7 @@ public interface HarvestService {
 
     void validateTree(Tree tree, Season season);
 
-    List<Harvest> getAllHarvests();
+    Page<Harvest> getAllHarvests(Pageable pageable);
 
     Harvest getHarvestById(UUID harvestId);
 

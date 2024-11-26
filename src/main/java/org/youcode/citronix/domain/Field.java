@@ -30,7 +30,7 @@ public class Field {
     @JoinColumn(name = "farm_id", nullable = false)
     private Farm farm;
 
-    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "field", orphanRemoval = true)
     private List<Tree> trees;
 }
 
